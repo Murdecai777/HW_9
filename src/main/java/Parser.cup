@@ -1,0 +1,117 @@
+import java_cup.runtime.*;
+
+parser code  {:
+  public void report_error(String message, Object info) {
+    StringBuilder m = new StringBuilder("Error ");
+
+    if (info instanceof java_cup.runtime.Symbol)
+      m.append( "("+info.toString()+")" );
+
+    m.append(" : "+message);
+
+    System.out.println(m);
+  }
+
+  public void report_fatal_error(String message, Object info) {
+    report_error(message, info);
+    throw new RuntimeException("Fatal Syntax Error");
+  }
+:};
+
+terminal semicolon
+terminal eq
+terminal plus, minus
+terminal inc, dec, mod
+terminal less, leq, greater, geq, AND, OR
+terminal KeyW_Skip, KeyW_Write, KeyW_Then, KeyW_Read
+terminal KeyW_While,KeyW_Do,KeyW_If, KeyW_Else, Text, Number, Var, Power
+terminal EXTENDED_COMMENT, COMMENT_TEXT, STRING_TEXT, WHITE_SPACE_CHAR, NEWLINE, NONNEWLINE_WHITE_SPACE_CHAR
+terminal Ident, DIGIT, ALPHA,
+
+/* Non terminals */
+non terminal expr_list;
+non terminal expr;
+
+/* Precedences */
+precedence left open_br, close_br;
+precedence left plus, minus;
+precedence left inc, dec, mod;
+precedence left Power;
+
+start with expr_list;
+
+/* The grammar */
+expr_list ::= expr_list expr
+	      |
+          expr;
+
+expr  ::= Ident:n
+  {:
+    RESULT = new Node(n);
+  :}
+
+| expr:l plus expr:r
+  {:
+    RESULT = new Node("plus", l, r);
+  :}
+
+| expr:l minus expr:r
+  {:
+    RESULT = new Node("minus", l, r);
+  :}
+
+| expr:l inc expr:r
+  {:
+    RESULT = new Node("inc", l, r);
+  :}
+
+| expr:l dec expr:r
+  {:
+    RESULT = new Node("dec", l, r);
+  :}
+
+| expr:l Power expr:r
+  {:
+    RESULT = new Node("Power", l, r);
+  :}
+
+| expr:l mod expr:r
+  {:
+    RESULT = new Node("mod", l, r);
+  :}
+
+| expr:l greater expr:r
+  {:
+    RESULT = new Node("greater", l, r);
+  :}
+
+| expr:l less expr:r
+    {:
+      RESULT = new Node("less", l, r);
+    :}
+
+| expr:l leq expr:r
+      {:
+        RESULT = new Node("leq", l, r);
+      :}
+
+| expr:l geq expr:r
+        {:
+          RESULT = new Node("geq", l, r);
+        :}
+
+| expr:l AND expr:r
+  {:
+    RESULT = new Node("AND", l, r);
+  :}
+
+| expr:l OR expr:r
+  {:
+    RESULT = new Node("OR", l, r);
+  :}
+
+| open_br expr:e close_br
+  {:
+    RESULT = new Node("()", e);
+  :}
+;
