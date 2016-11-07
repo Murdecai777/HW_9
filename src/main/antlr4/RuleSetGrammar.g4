@@ -1,6 +1,9 @@
+/*
 class mLexer extends Lexer;
 
-/* Lexical rules */
+*/
+/* Lexical rules *//*
+
 
 IF   : 'if' ;
 THEN : 'then';
@@ -55,7 +58,9 @@ WS : [ \r\t\u000C\n]+ -> skip ;
 
 
 
-/* Grammar rules */
+*/
+/* Grammar rules *//*
+
 class mParser extends Parser;
 
 rule_set : single_rule* EOF ;
@@ -104,4 +109,4 @@ logical_entity : (TRUE | FALSE) # LogicalConst
 
 numeric_entity : DECIMAL              # NumericConst
                | IDENTIFIER           # NumericVariable
-               ;
+               ;*/
