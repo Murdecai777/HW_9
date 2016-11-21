@@ -1,0 +1,3 @@
+if ((m*c**2) == E) then write (("Some text here"))
+else while (i<=5)
+write user_var
